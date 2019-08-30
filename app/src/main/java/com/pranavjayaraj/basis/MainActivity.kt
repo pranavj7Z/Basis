@@ -36,6 +36,7 @@ public class MainActivity : AppCompatActivity(), CardStackListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setupCardStackView()
+        setupButton()
     }
 
     override fun onBackPressed() {
@@ -84,7 +85,34 @@ public class MainActivity : AppCompatActivity(), CardStackListener {
         initialize()
     }
 
+    private fun setupButton() {
+        val previous = findViewById<View>(R.id.skip_button)
+        previous.setOnClickListener {
+                val setting = RewindAnimationSetting.Builder()
+                        .setDirection(Direction.Left)
+                        .setDuration(Duration.Normal.duration)
+                        .setInterpolator(DecelerateInterpolator())
+                        .build()
+                manager.setRewindAnimationSetting(setting)
+                cardStackView.rewind()
+        }
 
+        val reload = findViewById<View>(R.id.rewind_button)
+        reload.setOnClickListener {
+           reload()
+        }
+
+        val next = findViewById<View>(R.id.like_button)
+        next.setOnClickListener {
+            val setting = SwipeAnimationSetting.Builder()
+                    .setDirection(Direction.Right)
+                    .setDuration(Duration.Normal.duration)
+                    .setInterpolator(AccelerateInterpolator())
+                    .build()
+            manager.setSwipeAnimationSetting(setting)
+            cardStackView.swipe()
+        }
+    }
 
     private fun initialize() {
         manager.setStackFrom(StackFrom.None)
