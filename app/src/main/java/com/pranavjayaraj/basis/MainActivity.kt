@@ -28,7 +28,7 @@ public class MainActivity : AppCompatActivity(), CardStackListener {
     private val drawerLayout by lazy { findViewById<DrawerLayout>(R.id.drawer_layout) }
     private val cardStackView by lazy { findViewById<CardStackView>(R.id.card_stack_view) }
     private val manager by lazy { CardStackLayoutManager(this, this) }
-    private var spots = ArrayList<Content>()
+    private var spots = Parse().execute().get()
     private var adapter = SwipeAdapter(spots)
     private val indi by lazy { findViewById<TextView>(R.id.indi) }
 
@@ -148,5 +148,43 @@ public class MainActivity : AppCompatActivity(), CardStackListener {
 
     }
 
+    class Parse : AsyncTask<Unit, Unit, List<Content>>() {
+
+        @RequiresApi(Build.VERSION_CODES.KITKAT)
+        override fun doInBackground(vararg params: Unit?): List<Content>? {
+            val contentList = ArrayList<Content>()
+            val url = URL("https://gist.githubusercontent.com/anishbajpai014/d482191cb4fff429333c5ec64b38c197/raw/b11f56c3177a9ddc6649288c80a004e7df41e3b9/HiringTask.json")
+            val httpClient = url.openConnection() as HttpURLConnection
+            if (httpClient.responseCode == HttpURLConnection.HTTP_OK) {
+                try {
+                    val stream = BufferedInputStream(httpClient.inputStream)
+                    val data: String = readStream(inputStream = stream)
+                    val jsonFormattedString = data.replace("/", "")
+                    val jsonObject = JSONObject(jsonFormattedString)
+                    val jsonArray = jsonObject.getJSONArray("data")
+                    for (i in 0 until jsonArray.length())
+                    {
+                        val item = jsonArray.getJSONObject(i)
+                        val newVideo = Content(city = item.getString("text"), name=item.getString("id"))
+                        contentList.add(newVideo)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                } finally {
+                    httpClient.disconnect()
+                }
+            } else {
+                println("ERROR ${httpClient.responseCode}")
+            }
+            return contentList
+        }
+        private fun readStream(inputStream: BufferedInputStream): String {
+            val bufferedReader = BufferedReader(InputStreamReader(inputStream))
+            val stringBuilder = StringBuilder()
+            bufferedReader.forEachLine { stringBuilder.append(it) }
+            return stringBuilder.toString()
+        }
+
+    }
 
 }
