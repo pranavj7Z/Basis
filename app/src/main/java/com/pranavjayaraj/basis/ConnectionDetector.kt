@@ -5,9 +5,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 
-/**
- * Created by ALMIGHTY on 3/6/2017.
- */
 class ConnectionDetector {
 
 

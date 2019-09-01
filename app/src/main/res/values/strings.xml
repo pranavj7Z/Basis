@@ -2,6 +2,6 @@
 
 <resources>
     <!-- App -->
-    <string name="app_name">CardStackView</string>
+    <string name="app_name">BasisSwipeable</string>
 
 </resources>
