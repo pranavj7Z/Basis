@@ -1,4 +1,4 @@
-# Basis-Swipeable-Cards
+# Swipeable-Cards
 • Fetches data and displays as Swipeable cards.<br>
 • User can swipe the card to move to next card.<br>
 • User can Go back to the previous card.<br>
